@@ -2,6 +2,7 @@ package ie.atu.week5.customerapp;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.aggregation.BooleanOperators;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,15 @@ public class OrderController {
     public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) {
         Order savedOrder = orderService.createOrder(order);
         return ResponseEntity.ok(savedOrder);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Order> updatedOrder(@PathVariable String id, @RequestBody Order order) {
+        try{
+            Order updatedOrder = orderService.updateOrder(id, order);
+            return ResponseEntity.ok(updatedOrder);
+        }catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")

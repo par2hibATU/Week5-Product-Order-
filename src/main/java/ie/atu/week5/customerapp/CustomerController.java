@@ -1,7 +1,6 @@
 package ie.atu.week5.customerapp;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +13,6 @@ public class CustomerController {
     private final CustomerService customerService;
 
     public CustomerController( CustomerService customerService) {
-
         this.customerService = customerService;
     }
 
@@ -32,6 +30,18 @@ public class CustomerController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Customer> updatedCustomer(@PathVariable String id, @RequestBody Customer customer) {
+        try{
+            Customer updatedCustomer = customerService.updateCustomer(id, customer);
+            return ResponseEntity.ok(updatedCustomer);
+        }catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 
     @PostMapping
     public ResponseEntity<Customer> createCustomer(@Valid @RequestBody Customer customer) {

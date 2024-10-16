@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -22,6 +23,18 @@ public class OrderService {
     }
     public Order createOrder(Order order) {
         return orderRepository.save(order);
+    }
+    public Order updateOrder(String id, Order order) {
+        Optional<Order> orderOptional = orderRepository.findById(id);
+        if (!orderOptional.isPresent()) {
+            throw new RuntimeException("Order not found");
+        }
+        Order existingOrder = orderOptional.get();
+        existingOrder.setOrderCode(order.getOrderCode());
+        existingOrder.setOrderDate(order.getOrderDate());
+        existingOrder.setOrderDetails(order.getOrderDetails());
+
+        return orderRepository.save(existingOrder);
     }
     public boolean deleteOrder(String orderId) {
         if (orderRepository.existsById(orderId)) {
